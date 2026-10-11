@@ -1,0 +1,4 @@
+{
+  "$schema": "https://json.schemastore.org/launchsettings.json",
+  "profiles": { "TrailRent.Catalog.Api": { "commandName": "Project", "dotnetRunMessages": true, "launchBrowser": true, "launchUrl": "swagger", "applicationUrl": "http://localhost:5103", "environmentVariables": { "ASPNETCORE_ENVIRONMENT": "Development" } } }
+}
