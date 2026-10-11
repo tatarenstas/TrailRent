@@ -1,0 +1,32 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrailRent.Domain", "TrailRent.Domain\TrailRent.Domain.csproj", "{57F0BF40-9A4A-4AEE-9E5A-4B6D8EF629D1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrailRent.Dal", "TrailRent.Dal\TrailRent.Dal.csproj", "{FC1A2E95-302D-4AB2-B94B-E6A3C9398A17}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrailRent.Bll", "TrailRent.Bll\TrailRent.Bll.csproj", "{9B27A38A-6677-4CD5-A6C4-AFF4C3B63EAA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrailRent.Api", "TrailRent.Api\TrailRent.Api.csproj", "{9CF4CF72-4590-4E80-BC2C-3D716E96912B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrailRent.AppHost", "TrailRent.AppHost\TrailRent.AppHost.csproj", "{C3B825F4-FFD3-4DC4-B2E0-5CEB9C83C916}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{57F0BF40-9A4A-4AEE-9E5A-4B6D8EF629D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57F0BF40-9A4A-4AEE-9E5A-4B6D8EF629D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC1A2E95-302D-4AB2-B94B-E6A3C9398A17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC1A2E95-302D-4AB2-B94B-E6A3C9398A17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B27A38A-6677-4CD5-A6C4-AFF4C3B63EAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B27A38A-6677-4CD5-A6C4-AFF4C3B63EAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CF4CF72-4590-4E80-BC2C-3D716E96912B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CF4CF72-4590-4E80-BC2C-3D716E96912B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3B825F4-FFD3-4DC4-B2E0-5CEB9C83C916}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3B825F4-FFD3-4DC4-B2E0-5CEB9C83C916}.Debug|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+EndGlobal
