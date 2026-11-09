@@ -1,0 +1,11 @@
+var builder = DistributedApplication.CreateBuilder(args);
+var password = builder.AddParameter("sql-password", secret: true);
+var sql = builder.AddSqlServer("sql", password).WithDataVolume();
+var ordersDb = sql.AddDatabase("OrdersDb"); var catalogDb = sql.AddDatabase("CatalogDb");
+var mongo = builder.AddMongoDB("mongo").WithDataVolume(); var reviewsDb = mongo.AddDatabase("ReviewsDb");
+var orders = builder.AddProject<Projects.Services_Orders>("orders-api").WithReference(ordersDb).WaitFor(ordersDb);
+var catalog = builder.AddProject<Projects.Services_Catalog>("catalog-api").WithReference(catalogDb).WaitFor(catalogDb);
+var reviews = builder.AddProject<Projects.Services_Reviews>("reviews-api").WithReference(reviewsDb).WaitFor(reviewsDb);
+var aggregator = builder.AddProject<Projects.Platform_Aggregator>("aggregator").WithReference(orders).WithReference(catalog).WithReference(reviews).WaitFor(orders).WaitFor(catalog).WaitFor(reviews);
+builder.AddProject<Projects.Platform_ApiGateway>("gateway").WithHttpEndpoint(port: 5000, name: "public").WithReference(orders).WithReference(catalog).WithReference(reviews).WithReference(aggregator).WaitFor(aggregator);
+builder.Build().Run();

@@ -1,0 +1,6 @@
+using System.Net.Http.Json;
+namespace Platform.Aggregator.Clients;
+public sealed class OrdersClient(HttpClient http) { public Task<OrderDto?> GetAsync(long id, CancellationToken ct) => http.GetFromJsonAsync<OrderDto>($"/api/orders/{id}", ct); }
+public sealed class CatalogClient(HttpClient http) { public Task<IReadOnlyList<ProductDto>?> GetAsync(IEnumerable<long> ids, CancellationToken ct) => http.GetFromJsonAsync<IReadOnlyList<ProductDto>>($"/api/products?ids={string.Join(',', ids)}", ct); }
+public sealed class ReviewsClient(HttpClient http) { public Task<IReadOnlyList<ReviewDto>?> GetAsync(long productId, CancellationToken ct) => http.GetFromJsonAsync<IReadOnlyList<ReviewDto>>($"/api/reviews?productId={productId}", ct); }
+public sealed record OrderDto(long Id, string Status, IReadOnlyList<OrderItemDto> Items); public sealed record OrderItemDto(long ProductId, int Quantity); public sealed record ProductDto(long Id, string Name, decimal DailyRate); public sealed record ReviewDto(string Id, long ProductId, string Author, int Rating, string Text); public sealed record FullOrderDto(OrderDto Order, IReadOnlyList<ProductDto> Products, IReadOnlyList<ReviewDto> Reviews, IReadOnlyList<string> Warnings);

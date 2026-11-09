@@ -1,0 +1,3 @@
+using System.Diagnostics;
+using Platform.ServiceDefaults;
+var builder = WebApplication.CreateBuilder(args); builder.AddServiceDefaults(); builder.Services.AddReverseProxy().LoadFromConfig(builder.Configuration.GetSection("ReverseProxy")).AddServiceDiscoveryDestinationResolver(); var app = builder.Build(); app.UseCorrelationId(); app.Use(async (context, next) => { var watch = Stopwatch.StartNew(); await next(); app.Logger.LogInformation("Gateway {Method} {Path} returned {StatusCode} in {ElapsedMs}ms", context.Request.Method, context.Request.Path, context.Response.StatusCode, watch.ElapsedMilliseconds); }); app.MapReverseProxy(); app.MapDefaultEndpoints(); app.Run(); public partial class Program;

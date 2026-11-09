@@ -1,0 +1,3 @@
+using Platform.ServiceDefaults;
+var builder = WebApplication.CreateBuilder(args); builder.AddServiceDefaults(); var app = builder.Build(); app.UseCorrelationId(); app.MapGet("/api/orders/{id:long}", (long id, ILogger<Program> log) => { log.LogInformation("Order {OrderId} retrieved, status {Status}", id, "Confirmed"); return Results.Ok(new OrderDto(id, "Confirmed", [new OrderItemDto(101, 2), new OrderItemDto(205, 1)])); }); app.MapDefaultEndpoints(); app.Run();
+public sealed record OrderDto(long Id, string Status, IReadOnlyList<OrderItemDto> Items); public sealed record OrderItemDto(long ProductId, int Quantity); public partial class Program;

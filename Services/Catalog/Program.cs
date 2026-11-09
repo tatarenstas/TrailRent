@@ -1,0 +1,3 @@
+using Platform.ServiceDefaults;
+var builder = WebApplication.CreateBuilder(args); builder.AddServiceDefaults(); var app = builder.Build(); app.UseCorrelationId(); app.MapGet("/api/products", (string? ids) => Results.Ok(new[] { new ProductDto(101, "Alpine two-person tent", 420m), new ProductDto(205, "Carbon trekking poles", 175m) }.Where(p => ids is null || ids.Split(',').Contains(p.Id.ToString())))); app.MapGet("/api/products/{id:long}", (long id) => Results.Ok(new ProductDto(id, id == 101 ? "Alpine two-person tent" : "Carbon trekking poles", id == 101 ? 420m : 175m))); app.MapDefaultEndpoints(); app.Run();
+public sealed record ProductDto(long Id, string Name, decimal DailyRate); public partial class Program;
