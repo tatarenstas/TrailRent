@@ -1,0 +1,6 @@
+using Microsoft.Extensions.Caching.Distributed;
+using Services.Catalog.Grpc;
+using Services.Catalog.Services;
+var builder=WebApplication.CreateBuilder(args);builder.Services.AddGrpc(o=>o.Interceptors.Add<LoggingInterceptor>());builder.Services.AddMemoryCache(o=>o.SizeLimit=10_000);builder.Services.AddDistributedMemoryCache();builder.Services.AddSingleton<CacheMetrics>();builder.Services.AddSingleton<TwoLevelCache>();var app=builder.Build();app.MapGrpcService<CatalogGrpcService>();app.MapGet("/api/products/{id:int}",async(int id,TwoLevelCache c,CancellationToken ct)=>await c.GetOrCreateAsync($"catalog:product:{id}",()=>Task.FromResult(CatalogGrpcService.Store.GetValueOrDefault(id)),ct) is { } p?Results.Ok(p):Results.NotFound());app.MapDefaultEndpoints();app.Run();
+public sealed class LoggingInterceptor(ILogger<LoggingInterceptor> logger):Grpc.Core.Interceptors.Interceptor{public override async Task<TResponse> UnaryServerHandler<TRequest,TResponse>(TRequest request,Grpc.Core.ServerCallContext context,Grpc.Core.UnaryServerMethod<TRequest,TResponse> next){var response=await next(request,context);logger.LogInformation("gRPC {Method}: OK",context.Method);return response;}}
+public static class Health{public static WebApplication MapDefaultEndpoints(this WebApplication app){app.MapGet("/health",()=>Results.Ok());return app;}} public partial class Program;

@@ -1,0 +1,8 @@
+syntax = "proto3";
+option csharp_namespace = "TrailRent.Catalog.Grpc";
+package catalog;
+service CatalogService { rpc GetProduct(GetProductRequest) returns (ProductReply); rpc GetProductsByIds(GetProductsRequest) returns (ProductsReply); }
+message GetProductRequest { int32 id = 1; }
+message GetProductsRequest { repeated int32 ids = 1; }
+message ProductReply { int32 id = 1; string name = 2; string sku = 3; double daily_rate = 4; int32 available_stock = 5; }
+message ProductsReply { repeated ProductReply products = 1; }
