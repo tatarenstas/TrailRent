@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -29,8 +30,17 @@ public sealed class EquipmentRenamedConsumer(IConnection connection, IServiceSco
         {
             var item = JsonSerializer.Deserialize<EquipmentRenamedIntegrationEvent>(delivery.Body.Span) ?? throw new JsonException("Invalid event JSON");
             using var scope = scopes.CreateScope();
-            var processed = scope.ServiceProvider.GetRequiredService<ProcessedEventStore>();
-            if (await processed.TryInsertInTransactionAsync(item.EventId, ct)) { scope.ServiceProvider.GetRequiredService<LocalEquipmentCatalog>().Rename(item.EquipmentId, item.NewName); await processed.SaveChangesAsync(ct); }
+            var db = scope.ServiceProvider.GetRequiredService<OrdersEventDbContext>();
+            await db.Database.EnsureCreatedAsync(ct);
+            await using var transaction = await db.Database.BeginTransactionAsync(ct);
+            if (!await db.ProcessedIntegrationEvents.AnyAsync(x => x.EventId == item.EventId, ct))
+            {
+                db.ProcessedIntegrationEvents.Add(new ProcessedIntegrationEvent { EventId = item.EventId, ProcessedAt = DateTimeOffset.UtcNow });
+                var equipment = await db.EquipmentReferences.FindAsync([item.EquipmentId], ct);
+                if (equipment is null) db.EquipmentReferences.Add(new LocalEquipmentReference { EquipmentId = item.EquipmentId, Name = item.NewName }); else equipment.Name = item.NewName;
+                await db.SaveChangesAsync(ct); // EventId marker and local copy are written atomically.
+            }
+            await transaction.CommitAsync(ct);
             await channel.BasicAckAsync(delivery.DeliveryTag, multiple: false, cancellationToken: ct);
             logger.LogInformation("Ack event {EventId} {EventType} EquipmentId={EquipmentId} CorrelationId={CorrelationId}", item.EventId, nameof(EquipmentRenamedIntegrationEvent), item.EquipmentId, correlationId);
         }
